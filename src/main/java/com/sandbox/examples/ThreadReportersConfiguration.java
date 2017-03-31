@@ -18,6 +18,11 @@ class ThreadReportersConfiguration {
     }
 
     @Bean
+    Rx2ThreadReporter rx2ThreadReporter() {
+        return new Rx2ThreadReporter(io.reactivex.schedulers.Schedulers.io());
+    }
+
+    @Bean
     Scheduler ioScheduler() {
         return Schedulers.io();
     }
@@ -30,6 +35,16 @@ class ThreadReportersConfiguration {
     @Bean
     HystrixThreadReporter hystrixThreadReporter() {
         return new HystrixThreadReporter();
+    }
+
+    @Bean
+    Resilence4jThreadReported resilence4jThreadReported() {
+        return new Resilence4jThreadReported();
+    }
+
+    @Bean
+    Resilence4jRx2ThreadReporter resilence4jRx2ThreadReporter() {
+        return new Resilence4jRx2ThreadReporter(rx2ThreadReporter());
     }
 
     @Bean

@@ -17,17 +17,26 @@ class ThreadReportEndpoint {
     private final HystrixThreadReporter hystrixThreadReporter;
     private final RxHystrixThreadReporter rxHystrixThreadReporter;
     private final HystrixRxThreadReporter hystrixRxThreadReporter;
+    private final Resilence4jThreadReported resilence4jThreadReported;
+    private final Rx2ThreadReporter rx2ThreadReporter;
+    private final Resilence4jRx2ThreadReporter resilence4jRx2ThreadReporter;
 
     public ThreadReportEndpoint(RxThreadReporter rxThreadReporter,
                                 EmbeddedRxThreadReporter embeddedRxThreadReporter,
                                 HystrixThreadReporter hystrixThreadReporter,
                                 RxHystrixThreadReporter rxHystrixThreadReporter,
-                                HystrixRxThreadReporter hystrixRxThreadReporter) {
+                                HystrixRxThreadReporter hystrixRxThreadReporter,
+                                Resilence4jThreadReported resilence4jThreadReported,
+                                Rx2ThreadReporter rx2ThreadReporter,
+                                Resilence4jRx2ThreadReporter resilence4jRx2ThreadReporter) {
         this.rxThreadReporter = requireNonNull(rxThreadReporter);
         this.embeddedRxThreadReporter = requireNonNull(embeddedRxThreadReporter);
         this.hystrixThreadReporter = requireNonNull(hystrixThreadReporter);
         this.rxHystrixThreadReporter = requireNonNull(rxHystrixThreadReporter);
         this.hystrixRxThreadReporter = requireNonNull(hystrixRxThreadReporter);
+        this.resilence4jThreadReported = requireNonNull(resilence4jThreadReported);
+        this.rx2ThreadReporter = requireNonNull(rx2ThreadReporter);
+        this.resilence4jRx2ThreadReporter = requireNonNull(resilence4jRx2ThreadReporter);
     }
 
     @GetMapping("/undertow")
@@ -40,6 +49,12 @@ class ThreadReportEndpoint {
     Single<ThreadReport> getThreadReportForRxJava() {
         return rxThreadReporter
             .generateThreadReport(createThreadTrace());
+    }
+
+    @GetMapping("/rx2")
+    io.reactivex.Observable<ThreadReport> getThreadReportForRxJava2() {
+        return rx2ThreadReporter
+                .generateThreadReport(createThreadTrace());
     }
 
     @GetMapping("/rxembedded")
@@ -71,5 +86,17 @@ class ThreadReportEndpoint {
     Single<ThreadReport> getThreadReportForRxJavaWithHystrix() {
         return rxHystrixThreadReporter
             .generateThreadReport(createThreadTrace());
+    }
+
+    @GetMapping("/resilence4j")
+    ThreadReport getThreadReportForResilence4j() throws Exception {
+        return resilence4jThreadReported
+                .generateThreadReport(createThreadTrace());
+    }
+
+    @GetMapping("/resilence4jrx2")
+    io.reactivex.Observable<ThreadReport> getThreadReportForResilence4jRx2() throws Exception {
+        return resilence4jRx2ThreadReporter
+                .generateThreadReport(createThreadTrace());
     }
 }
