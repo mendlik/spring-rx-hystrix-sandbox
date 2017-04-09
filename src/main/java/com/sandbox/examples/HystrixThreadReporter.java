@@ -5,10 +5,11 @@ import com.sandbox.concurrent.ThreadReport;
 import com.sandbox.concurrent.ThreadTracer;
 
 class HystrixThreadReporter {
-    @HystrixCommand
-    ThreadReport generateThreadReport(ThreadTracer threadTracer) {
-        return threadTracer
-            .registerCurrentThread()
-            .generateThreadReport();
-    }
+
+  @HystrixCommand
+  ThreadReport generateThreadReport(ThreadTracer threadTracer) {
+    return threadTracer
+        .registerCurrentThread()
+        .generateThreadReport();
+  }
 }
